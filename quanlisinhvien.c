@@ -24,7 +24,6 @@ typedef struct listStudent
 
 
 
-// Khởi tạo danh sách;
 void initializeList(listStu *ptr);
 void displayList(listStu *ptr);
 void addStudent(listStu *ptr);
@@ -32,24 +31,28 @@ void editStudent(listStu *ptr);
 void calculateAverageGrade(listStu *ptr);
 void sortListStudent(listStu *ptr);
 void removeStudent(listStu *ptr);
+void saveToFile(listStu *ptr);
+void readFile(listStu *ptr);
 int main()
 {
     listStu list[100];
+    initializeList(list);
+    readFile(list);
+    displayList(list);
     int option;
-        printf("\nApp Student Management design by Hoang:");
-        printf("\n\t0. Exit");
-        printf("\n\t1. Add students to the list.");
-        printf("\n\t2. Edit List Student.");
-        printf("\n\t3. Sort List Student.");
-        printf("\n\t4. Remove Students to the list.");
-        printf("\n\t5. Display List Student.");
+    printf("\nApp Student Management design by Hoang:");
+    printf("\n\t0. Exit");
+    printf("\n\t1. Add students to the list.");
+    printf("\n\t2. Edit List Student.");
+    printf("\n\t3. Sort List Student.");
+    printf("\n\t4. Remove Students to the list.");
+    printf("\n\t5. Display List Student.");
     do{
         printf("\nEnter My Option: ");
         scanf("%d",&option);
-        switch (option)
+        switch(option)
         {
         case 0:
-            return 0;
             break;
         case 1:
             addStudent(list);
@@ -66,29 +69,33 @@ int main()
         case 5:
             displayList(list);
             break;
+        case 6:
+            readFile(list);
+            break;
+        case 7:
+            saveToFile(list);
+            break;
         default:
             break;
         }
-    }while(option != 0 || option >= 6);
+    }while(option);
 }
 
 void initializeList(listStu *ptr)
 {
     ptr->order = 0;
+    // FILE *fOut = fopen("sv.txt", "a");
+    // fprintf(fOut,"\nList Student:");
+    // fprintf(fOut,"\n%-10s %-30s %-10s %-20s %-15s %-15s %-15s %-30s","STT","Name","Age","Student Code","Point Math","Point English","Point Philology","Point the average grade");
+    // fclose(fOut);
 }
 void displayList(listStu *ptr)
 {
     printf("\nList Student:");
+    printf("\n %-10s %-30s %-10s %-20s %-15s %-15s %-15s %-30s","STT","Name","Age","Student Code","Point Math","Point English","Point Philology","Point the average grade");
     for (int i = 0; i < ptr->order; i++)
     {
-        printf("\n\tStt: %d |",i + 1);
-        printf("Name: %s |",(ptr + i)->stu.name);
-        printf("Student Code: %s |",(ptr + i)->stu.studentCode);
-        printf("Age: %d |",(ptr + i)->stu.age);
-        printf("Point Math: %.2f |",(ptr + i)->stu.point.pointMath);
-        printf("Point English: %.2f |",(ptr + i)->stu.point.pointEnglish);
-        printf("Point Philology: %.2f |",(ptr + i)->stu.point.pointPhilology);
-        printf("Point the average grade: %.2f",(ptr + i)->stu.point.pointAverageGrade);
+        printf("\n %-10d %-30s %-10d %-20s %-15.2f %-15.2f %-15.2f %-30.2f",i + 1,(ptr + i)->stu.name,(ptr + i)->stu.age,(ptr + i)->stu.studentCode,(ptr + i)->stu.point.pointMath,(ptr + i)->stu.point.pointEnglish,(ptr + i)->stu.point.pointPhilology,(ptr + i)->stu.point.pointAverageGrade);
     }
 }
 void addStudent(listStu *ptr)
@@ -120,7 +127,6 @@ void addStudent(listStu *ptr)
         calculateAverageGrade(ptr + stt);
         printf("---------------------------------------------");
     }
-    
 }
 void calculateAverageGrade(listStu *ptr)
 {
@@ -130,7 +136,7 @@ void editStudent(listStu *ptr)
 {
     displayList(ptr);
     int num;
-    printf("\nNhap so thu tu sinh vien muon sua :");
+    printf("\nEnter the number of students: ");
     scanf("%d",&num);
     int option;
     printf("\nWhat do you want to edit:");
@@ -148,52 +154,52 @@ void editStudent(listStu *ptr)
     switch (option)
     {
     case 1:
-        printf("\nEnter new name:");
+        printf("\nEnter new name: ");
         getchar(); // Đọc ký tự newline còn lại trong bộ đệm
         fgets((ptr + num)->stu.name, sizeof((ptr + num)->stu.name), stdin);
         (ptr + num)->stu.name[strcspn((ptr + num)->stu.name, "\n")] = '\0';
         break;
     case 2:
-        printf("\nEnter new age:");
+        printf("\nEnter new age: ");
         scanf("%d",&(ptr + num)->stu.age);
         break;
     case 3:
-        printf("\nEnter new student code:");
+        printf("\nEnter new student code: ");
         getchar(); // Đọc ký tự newline còn lại trong bộ đệm
         fgets((ptr + num)->stu.studentCode, sizeof((ptr + num)->stu.studentCode), stdin);
         (ptr + num)->stu.studentCode[strcspn((ptr + num)->stu.studentCode, "\n")] = '\0';
         break;
     case 4:
-        printf("\nEnter new point Math:");
+        printf("\nEnter new point Math: ");
         scanf("%f",&(ptr + num)->stu.point.pointMath);
         calculateAverageGrade(ptr);
         break;
     case 5:
-        printf("\nEnter new point English:");
+        printf("\nEnter new point English: ");
         scanf("%f",&(ptr + num)->stu.point.pointEnglish);
         calculateAverageGrade(ptr);
         break;
     case 6:
-        printf("\nEnter new Point Philology:");
+        printf("\nEnter new Point Philology: ");
         scanf("%f",&(ptr + num)->stu.point.pointPhilology);
         calculateAverageGrade(ptr);
         break;
     case 7:
-        printf("\nEnter new name:");
+        printf("\nEnter new name: ");
         getchar(); // Đọc ký tự newline còn lại trong bộ đệm
         fgets((ptr + num)->stu.name, sizeof((ptr + num)->stu.name), stdin);
         (ptr + num)->stu.name[strcspn((ptr + num)->stu.name, "\n")] = '\0';
-        printf("\nEnter new age:");
+        printf("\nEnter new age: ");
         scanf("%d",&(ptr + num)->stu.age);
-        printf("\nEnter new student code:");
+        printf("\nEnter new student code: ");
         getchar(); // Đọc ký tự newline còn lại trong bộ đệm
         fgets((ptr + num)->stu.studentCode, sizeof((ptr + num)->stu.studentCode), stdin);
         (ptr + num)->stu.studentCode[strcspn((ptr + num)->stu.studentCode, "\n")] = '\0';
-        printf("\nEnter new point English:");
+        printf("\nEnter new point Math: ");
         scanf("%f",&(ptr + num)->stu.point.pointMath);
-        printf("\nEnter new point Phiology:");
+        printf("\nEnter new point English: ");
         scanf("%f",&(ptr + num)->stu.point.pointEnglish);
-        printf("\nEnter new age:");
+        printf("\nEnter new point Philology: ");
         scanf("%f",&(ptr + num)->stu.point.pointPhilology);
         break;
     case 8:
@@ -243,4 +249,29 @@ void removeStudent(listStu *ptr)
         (ptr + index)->stu = (ptr + index + 1)->stu;
     }
     (ptr->order)--;
+}
+void saveToFile(listStu *ptr)
+{
+    FILE *fOut = fopen("sv.txt", "a");
+    for (int i = 0; i < ptr->order; i++)
+    {
+        fprintf(fOut,"%-10d %-30s %-10d %-20s %-15.2f %-15.2f %-15.2f %-30.2f\n",i + 1,(ptr + i)->stu.name,(ptr + i)->stu.age,(ptr + i)->stu.studentCode,(ptr + i)->stu.point.pointMath,(ptr + i)->stu.point.pointEnglish,(ptr + i)->stu.point.pointPhilology,(ptr + i)->stu.point.pointAverageGrade);
+    }
+    fclose(fOut);
+}
+
+void readFile(listStu *ptr)
+{
+    FILE *fOut = fopen("sv.txt", "r");
+    int i = 0;
+    for (;;)
+    {
+        fscanf(fOut, "%10d %30s %10d %20s %15f %15f %15f %30f\n", &(ptr->order), (ptr + i)->stu.name, &(ptr + i)->stu.age, (ptr + i)->stu.studentCode, &(ptr + i)->stu.point.pointMath, &(ptr + i)->stu.point.pointEnglish, &(ptr + i)->stu.point.pointPhilology, &(ptr + i)->stu.point.pointAverageGrade);
+        if(feof(fOut))
+        {
+            break;
+        }
+        i += 1;
+    }
+    fclose(fOut);
 }
