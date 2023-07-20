@@ -23,17 +23,19 @@ typedef struct listStudent
 
 void initializeList(listStu *);
 void displayList(listStu *);
-void addStudent(listStu *);
+void addStudent(listStu *, int *);
 void editStudent(listStu *);
 void calculateAverageGrade(listStu *, int);
 void sortListStudent(listStu *);
 void removeStudent(listStu *);
-void saveToFile(listStu *);
+void saveToFile(listStu *, int *);
 void readFile(listStu *);
+void print_column_in_file(listStu *);
 int main()
 {
     listStu list;
     initializeList(&list);
+    int index_old = list.order;
     int option;
     printf("\nApp Student Management design by Hoang:");
     printf("\n\t0. Exit");
@@ -53,7 +55,7 @@ int main()
         case 0:
             break;
         case 1:
-            addStudent(&list);
+            addStudent(&list, &index_old);
             break;
         case 2:
             editStudent(&list);
@@ -71,7 +73,7 @@ int main()
             readFile(&list);
             break;
         case 7:
-            saveToFile(&list);
+            saveToFile(&list, &index_old);
             break;
         default:
             break;
@@ -82,23 +84,25 @@ int main()
 void initializeList(listStu *ptr)
 {
     ptr->order = 0;
-    // FILE *fOut = fopen("sv.txt", "a");
-    // fprintf(fOut,"\nList Student:");
-    // fprintf(fOut,"\n%-10s %-30s %-10s %-20s %-15s %-15s %-15s %-30s","STT","Name","Age","Student Code","Point Math","Point English","Point Philology","Point the average grade");
-    // fclose(fOut);
+    FILE *file = fopen("sv.txt", "r");
+    int ch = fgetc(file);
+    if (ch == EOF)
+    {
+        print_column_in_file(ptr);
+    }
 }
 void displayList(listStu *ptr)
 {
-    printf("\nCount: %d", ptr->order);
     printf("\nList Student:");
-    printf("\n %-10s %-30s %-10s %-20s %-15s %-15s %-15s %-30s", "STT", "Name", "Age", "Student Code", "Point Math", "Point English", "Point Philology", "Point the average grade");
+    printf("\n%-10s %-30s %-10s %-20s %-15s %-15s %-15s %-30s", "STT", "Name", "Age", "Student Code", "Point Math", "Point English", "Point Philology", "Point the average grade");
     for (int i = 0; i < ptr->order; i++)
     {
-        printf("\n %-10d %-30s %-10d %-20s %-15.2f %-15.2f %-15.2f %-30.2f", i + 1, ptr->stu[i].name, ptr->stu[i].age, ptr->stu[i].studentCode, ptr->stu[i].point.pointMath, ptr->stu[i].point.pointEnglish, ptr->stu[i].point.pointPhilology, ptr->stu[i].point.pointAverageGrade);
+        printf("\n%-10d %-30s %-10d %-20s %-15.2f %-15.2f %-15.2f %-30.2f", i + 1, ptr->stu[i].name, ptr->stu[i].age, ptr->stu[i].studentCode, ptr->stu[i].point.pointMath, ptr->stu[i].point.pointEnglish, ptr->stu[i].point.pointPhilology, ptr->stu[i].point.pointAverageGrade);
     }
 }
-void addStudent(listStu *ptr)
+void addStudent(listStu *ptr, int *index_old)
 {
+    *index_old = ptr->order;
     if (ptr->order > 100)
         return;
     int n;
@@ -237,7 +241,6 @@ void removeStudent(listStu *ptr)
         if (isEqual == 0)
         {
             index = i;
-            printf("Index = %d", index);
         }
     }
     if (index == -1)
@@ -254,28 +257,50 @@ void removeStudent(listStu *ptr)
         (ptr->order)--;
     }
 }
-void saveToFile(listStu *ptr)
+void saveToFile(listStu *ptr, int *index_old)
 {
     FILE *fOut = fopen("sv.txt", "a");
-    for (int i = 0; i < ptr->order; i++)
+    for (int i = *index_old; i < ptr->order; i++)
     {
         fprintf(fOut, "%-10d %-30s %-10d %-20s %-15.2f %-15.2f %-15.2f %-30.2f\n", i + 1, ptr->stu[i].name, ptr->stu[i].age, ptr->stu[i].studentCode, ptr->stu[i].point.pointMath, ptr->stu[i].point.pointEnglish, ptr->stu[i].point.pointPhilology, ptr->stu[i].point.pointAverageGrade);
     }
+    *index_old = ptr->order;
     fclose(fOut);
 }
 
 void readFile(listStu *ptr)
 {
+    int lineNumber = 0;
+    int linesToSkip = 2;
     FILE *fOut = fopen("sv.txt", "r");
+    char ch;
+    while ((ch = fgetc(fOut)) != EOF) // fgetc returns character if(character == '\n') => skip line ;
+    {
+        if (ch == '\n')
+        {
+            lineNumber++;
+            if (lineNumber == linesToSkip)
+            {
+                break;
+            }
+        }
+    }
     int i = 0;
     for (;;)
     {
-        fscanf(fOut, "%10d %30s %10d %20s %15f %15f %15f %30f\n", &(ptr->order), ptr->stu[i].name, &ptr->stu[i].age, ptr->stu[i].studentCode, &ptr->stu[i].point.pointMath, &ptr->stu[i].point.pointEnglish, &ptr->stu[i].point.pointPhilology, &ptr->stu[i].point.pointAverageGrade);
+        fscanf(fOut, "%10d %30s %10d %20s %15f %15f %15f %30f", &(ptr->order), ptr->stu[i].name, &ptr->stu[i].age, ptr->stu[i].studentCode, &ptr->stu[i].point.pointMath, &ptr->stu[i].point.pointEnglish, &ptr->stu[i].point.pointPhilology, &ptr->stu[i].point.pointAverageGrade);
         if (feof(fOut))
         {
             break;
         }
         i += 1;
     }
+    fclose(fOut);
+}
+void print_column_in_file(listStu *ptr)
+{
+    FILE *fOut = fopen("sv.txt", "a");
+    fprintf(fOut, "List Student:\n");
+    fprintf(fOut, "%-10s %-30s %-10s %-20s %-15s %-15s %-15s %-30s\n", "STT", "Name", "Age", "Student Code", "Point Math", "Point English", "Point Philology", "Point the average grade");
     fclose(fOut);
 }

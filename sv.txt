@@ -1,4 +1,7 @@
-1          Hoang                          18         001                  10.00           5.00            6.00            7.00                          
-2          Thong                          19         002                  5.00            6.00            3.00            4.67                          
-3          Diep                           20         003                  10.00           6.00            7.00            7.67                          
-4          Tuan                           4          004                  5.00            6.00            7.00            6.00                          
+List Student:
+STT        Name                           Age        Student Code         Point Math      Point English   Point Philology Point the average grade 
+1          hoang                          10         1                    2.00            3.00            4.00            3.00                          
+2          thong                          10         3                    4.00            5.00            6.00            5.00                          
+3          diep                           10         2                    6.00            7.00            8.00            7.00                          
+4          tuan                           10         4                    7.00            8.00            9.00            8.00                          
+5          nam                            20         5                    10.00           5.00            3.00            6.00                          6          test                           10         6                    5.00            6.00            7.00            6.00                          
